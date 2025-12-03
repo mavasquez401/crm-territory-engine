@@ -1,0 +1,4 @@
+region,segment,territory_id,owner_role
+Northeast,Institutional,NOR_INS,Sales Rep
+Northeast,Retail,NOR_RET,Sales Rep
+Midwest,Institutional,MID_INS,Sales Rep

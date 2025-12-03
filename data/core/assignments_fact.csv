@@ -1,0 +1,4 @@
+client_key,territory_id,primary_advisor_email,assignment_type,is_current
+1,NOR_INS,advisor1@example.com,PRIMARY,True
+2,NOR_RET,advisor2@example.com,PRIMARY,True
+3,MID_INS,advisor3@example.com,PRIMARY,True

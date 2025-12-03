@@ -1,0 +1,4 @@
+client_key,client_name,region,segment,parent_org,primary_advisor_email,is_active
+1,Atlas Capital Partners,Northeast,Institutional,Atlas Holdings,advisor1@example.com,True
+2,Beacon Wealth Management,Northeast,Retail,Beacon Group,advisor2@example.com,True
+3,Crescent Advisory Group,Midwest,Institutional,Crescent Holdings,advisor3@example.com,True

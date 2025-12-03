@@ -1,0 +1,39 @@
+[2025-12-03T16:26:07.520-0500] {processor.py:161} INFO - Started process (PID=85479) to work on /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:26:07.521-0500] {processor.py:830} INFO - Processing file /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py for tasks to queue
+[2025-12-03T16:26:07.521-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:26:07.521-0500] {dagbag.py:545} INFO - Filling up the DagBag from /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:26:07.523-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:26:07.522-0500] {dagbag.py:355} ERROR - Failed to import: /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+Traceback (most recent call last):
+  File "/Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/venv/lib/python3.11/site-packages/airflow/models/dagbag.py", line 351, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py", line 4, in <module>
+    import pandas as pd
+ModuleNotFoundError: No module named 'pandas'
+[2025-12-03T16:26:07.523-0500] {processor.py:842} WARNING - No viable dags retrieved from /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:26:07.549-0500] {processor.py:183} INFO - Processing /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py took 0.030 seconds
+[2025-12-03T16:29:20.258-0500] {processor.py:161} INFO - Started process (PID=87326) to work on /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:29:20.258-0500] {processor.py:830} INFO - Processing file /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py for tasks to queue
+[2025-12-03T16:29:20.259-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:29:20.258-0500] {dagbag.py:545} INFO - Filling up the DagBag from /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:29:20.259-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:29:20.259-0500] {dagbag.py:355} ERROR - Failed to import: /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+Traceback (most recent call last):
+  File "/Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/venv/lib/python3.11/site-packages/airflow/models/dagbag.py", line 351, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py", line 4, in <module>
+    import pandas as pd
+ModuleNotFoundError: No module named 'pandas'
+[2025-12-03T16:29:20.259-0500] {processor.py:842} WARNING - No viable dags retrieved from /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:29:20.286-0500] {processor.py:183} INFO - Processing /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py took 0.029 seconds
+[2025-12-03T16:53:33.852-0500] {processor.py:161} INFO - Started process (PID=98392) to work on /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:53:33.852-0500] {processor.py:830} INFO - Processing file /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py for tasks to queue
+[2025-12-03T16:53:33.853-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:53:33.853-0500] {dagbag.py:545} INFO - Filling up the DagBag from /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:53:34.083-0500] {processor.py:840} INFO - DAG(s) 'crm_client_ingestion_dag' retrieved from /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py
+[2025-12-03T16:53:34.152-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:53:34.151-0500] {override.py:1829} INFO - Created Permission View: can delete on DAG:crm_client_ingestion_dag
+[2025-12-03T16:53:34.154-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:53:34.154-0500] {override.py:1829} INFO - Created Permission View: can read on DAG:crm_client_ingestion_dag
+[2025-12-03T16:53:34.156-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:53:34.156-0500] {override.py:1829} INFO - Created Permission View: can edit on DAG:crm_client_ingestion_dag
+[2025-12-03T16:53:34.156-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:53:34.156-0500] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-12-03T16:53:34.160-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:53:34.159-0500] {dag.py:3118} INFO - Creating ORM DAG for crm_client_ingestion_dag
+[2025-12-03T16:53:34.163-0500] {logging_mixin.py:188} INFO - [2025-12-03T16:53:34.163-0500] {dag.py:3954} INFO - Setting next_dagrun for crm_client_ingestion_dag to 2025-12-02 00:00:00+00:00, run_after=2025-12-03 00:00:00+00:00
+[2025-12-03T16:53:34.169-0500] {processor.py:183} INFO - Processing /Users/manny/Documents/Coding/JobSearch/Enterprise CRM Territory & Segmentation Engine/crm-territory-engine/airflow/dags/crm_client_ingestion_dag.py took 0.318 seconds
