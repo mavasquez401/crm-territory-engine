@@ -132,10 +132,37 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 3. **Install dependencies**
 
 ```bash
-pip install apache-airflow pandas
+pip install apache-airflow pandas cryptography
 ```
 
-4. **Initialize Airflow**
+4. **🔐 Configure Security (IMPORTANT!)**
+
+Generate secure secrets for your installation:
+
+```bash
+python scripts/generate_secrets.py
+```
+
+Create your `.env` file from the template:
+
+```bash
+cp .env.example .env
+# Edit .env and add the generated secrets
+```
+
+Load environment variables:
+
+```bash
+export $(cat .env | grep -v '^#' | xargs)
+```
+
+**⚠️ Security Warning:**
+
+- NEVER commit `.env` or `airflow.cfg` to version control
+- These files contain sensitive secrets and are already in `.gitignore`
+- See [SECURITY.md](SECURITY.md) for detailed security guidelines
+
+5. **Initialize Airflow**
 
 ```bash
 cd airflow
@@ -143,7 +170,7 @@ export AIRFLOW_HOME=$(pwd)
 airflow db init
 ```
 
-5. **Create Airflow user**
+6. **Create Airflow user**
 
 ```bash
 airflow users create \
@@ -283,6 +310,44 @@ DATA_DIR = PROJECT_ROOT / "data"
 RAW_DIR = DATA_DIR / "mock_clients"
 CORE_DIR = DATA_DIR / "core"
 ```
+
+## 🔒 Security
+
+### Secret Management
+
+This project uses environment variables for sensitive configuration:
+
+- **Secret Key**: Used for Flask session management and CSRF protection
+- **Fernet Key**: Encrypts connection passwords in the database
+- **Database Credentials**: Connection strings for production databases
+- **SMTP Credentials**: Email notification settings
+
+### Best Practices
+
+✅ **DO:**
+
+- Use the `scripts/generate_secrets.py` tool to create secure keys
+- Store secrets in `.env` file (already in `.gitignore`)
+- Use environment variables for all sensitive data
+- Rotate secrets regularly, especially before production deployment
+- Use different secrets for dev/staging/production environments
+
+❌ **DON'T:**
+
+- Commit `.env` or `airflow.cfg` files to version control
+- Share secrets via email, Slack, or other insecure channels
+- Use default or weak secret keys
+- Reuse secrets across different environments
+
+### Security Resources
+
+For detailed security guidelines, see [SECURITY.md](SECURITY.md), which covers:
+
+- Secret key generation and rotation
+- Fernet encryption for database connections
+- Production deployment security
+- Secrets manager integration (AWS, Vault, etc.)
+- Incident response procedures
 
 ## 🧪 Testing
 

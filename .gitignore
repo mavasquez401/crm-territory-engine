@@ -1,0 +1,19 @@
+# Hide virtual environment
+venv/
+
+# Hide environment variables
+.env
+
+# Hide Airflow config and logs
+airflow/airflow.db
+airflow/logs/
+airflow/webserver_config.py
+
+# Hide data files
+data/*.csv
+data/**
+
+# Hide OS junk files
+.DS_Store
+
+airflow.cfg
