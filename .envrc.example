@@ -1,0 +1,27 @@
+# direnv configuration file
+# This file automatically loads environment variables when you cd into this directory
+# 
+# Setup:
+# 1. Install direnv: brew install direnv (macOS) or apt install direnv (Linux)
+# 2. Add to your shell config (~/.bashrc or ~/.zshrc):
+#    eval "$(direnv hook bash)"  # or zsh
+# 3. Copy this file: cp .envrc.example .envrc
+# 4. Allow direnv: direnv allow .
+#
+# Note: .envrc is gitignored for security
+
+# Load environment variables from .env file
+dotenv
+
+# Optional: Set AIRFLOW_HOME automatically
+export AIRFLOW_HOME="$(pwd)/airflow"
+
+# Optional: Activate virtual environment
+# source venv/bin/activate
+
+# Optional: Add project scripts to PATH
+# export PATH="$(pwd)/scripts:$PATH"
+
+echo "✅ Environment loaded for CRM Territory Engine"
+echo "   AIRFLOW_HOME: $AIRFLOW_HOME"
+

@@ -1,66 +1,120 @@
 #!/usr/bin/env python3
 """
-Script to generate secure secrets for Airflow configuration.
-Run this script to generate new secret keys for your .env file.
+Generate secure secrets for Airflow configuration.
+This script generates cryptographically secure random keys for:
+- Airflow Webserver Secret Key (Flask session management)
+- Airflow Fernet Key (Connection password encryption)
 """
 
 import secrets
-from cryptography.fernet import Fernet
+import sys
+
+try:
+    from cryptography.fernet import Fernet
+    HAS_CRYPTOGRAPHY = True
+except ImportError:
+    HAS_CRYPTOGRAPHY = False
 
 
-def generate_airflow_secret_key():
+def generate_webserver_secret():
     """
-    Generate a secure secret key for Airflow webserver.
-    This key is used for session management and CSRF protection.
+    Generate a secure random secret key for Flask webserver.
+    Returns a URL-safe base64-encoded string.
     """
     return secrets.token_urlsafe(32)
 
 
 def generate_fernet_key():
     """
-    Generate a Fernet key for encrypting connection passwords in the database.
-    This is used by Airflow to securely store sensitive connection information.
+    Generate a Fernet key for encrypting connection passwords.
+    Returns a base64-encoded 32-byte key.
     """
-    return Fernet.generate_key().decode()
+    if HAS_CRYPTOGRAPHY:
+        return Fernet.generate_key().decode()
+    else:
+        # Fallback: Generate a base64-encoded 32-byte key manually
+        import base64
+        key_bytes = secrets.token_bytes(32)
+        return base64.urlsafe_b64encode(key_bytes).decode()
 
 
 def main():
-    """
-    Generate and display all required secrets for Airflow configuration.
-    """
+    """Main function to generate and display secrets."""
     print("=" * 70)
-    print("Airflow Security Keys Generator")
+    print("🔐 Airflow Secrets Generator")
     print("=" * 70)
     print()
     
-    # Generate Airflow webserver secret key
-    secret_key = generate_airflow_secret_key()
-    print("🔐 Airflow Webserver Secret Key:")
-    print(f"   AIRFLOW__WEBSERVER__SECRET_KEY={secret_key}")
-    print()
+    # Check for cryptography package
+    if not HAS_CRYPTOGRAPHY:
+        print("⚠️  Warning: 'cryptography' package not found")
+        print("   Using fallback method for Fernet key generation")
+        print("   For production, install: pip install cryptography")
+        print()
+        print("-" * 70)
+        print()
     
-    # Generate Fernet key for connection encryption
+    # Generate secrets
+    webserver_secret = generate_webserver_secret()
     fernet_key = generate_fernet_key()
-    print("🔑 Fernet Key (for encrypting connection passwords):")
-    print(f"   AIRFLOW__CORE__FERNET_KEY={fernet_key}")
+    
+    print("✅ Generated secure secrets for your Airflow installation:")
+    print()
+    print("-" * 70)
+    print("AIRFLOW WEBSERVER SECRET KEY")
+    print("-" * 70)
+    print(f"AIRFLOW__WEBSERVER__SECRET_KEY={webserver_secret}")
+    print()
+    print("Purpose: Flask session management and CSRF protection")
+    print("Usage: Add this to your .env file")
+    print()
+    
+    print("-" * 70)
+    print("AIRFLOW FERNET KEY")
+    print("-" * 70)
+    print(f"AIRFLOW__CORE__FERNET_KEY={fernet_key}")
+    print()
+    print("Purpose: Encrypting connection passwords in the database")
+    print("Usage: Add this to your .env file")
     print()
     
     print("=" * 70)
-    print("📝 Instructions:")
+    print("📝 NEXT STEPS:")
     print("=" * 70)
-    print("1. Copy the keys above")
-    print("2. Add them to your .env file (create from .env.example)")
-    print("3. NEVER commit these keys to version control!")
-    print("4. Restart Airflow webserver and scheduler after updating")
     print()
-    print("⚠️  Security Notes:")
-    print("   - Keep these keys secret and secure")
-    print("   - Rotate keys periodically in production")
-    print("   - Use different keys for dev/staging/production")
-    print("   - If keys are compromised, generate new ones immediately")
+    print("1. Copy the generated keys above")
+    print("2. Add them to your .env file:")
+    print()
+    print("   cp .env.example .env")
+    print("   # Edit .env and paste the keys")
+    print()
+    print("3. Load environment variables before starting Airflow:")
+    print()
+    print("   export $(cat .env | grep -v '^#' | xargs)")
+    print()
+    print("4. Start Airflow services:")
+    print()
+    print("   cd airflow")
+    print("   export AIRFLOW_HOME=$(pwd)")
+    print("   airflow webserver & airflow scheduler")
+    print()
+    
+    print("=" * 70)
+    print("⚠️  SECURITY WARNINGS:")
+    print("=" * 70)
+    print()
+    print("• NEVER commit .env or airflow.cfg to version control")
+    print("• Keep these keys secure and confidential")
+    print("• Rotate keys periodically (quarterly recommended)")
+    print("• Use a secrets backend (AWS/GCP/Vault) in production")
+    print("• See SECURITY.md for detailed security guidelines")
+    print()
     print("=" * 70)
 
 
 if __name__ == "__main__":
-    main()
-
+    try:
+        main()
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+        sys.exit(1)

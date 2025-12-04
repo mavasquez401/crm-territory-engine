@@ -1,220 +1,156 @@
 # Security Guidelines
 
-## 🔒 Overview
+## 🔒 Secrets Management
 
-This document outlines security best practices for the CRM Territory & Segmentation Engine project.
+This project uses environment variables to manage sensitive configuration values. **Never commit secrets to version control.**
 
-## 🚨 Critical Security Concerns
+## Setup Instructions
 
-### 1. Secret Key Management
+### 1. Create Environment File
 
-**NEVER commit secrets to version control!**
+Copy the example environment file and fill in your actual values:
 
-#### Airflow Secret Key
-The `secret_key` in `airflow.cfg` is used for:
-- Flask session management
-- CSRF token generation
-- Request authorization to Celery workers
+```bash
+cp .env.example .env
+```
 
-**Current Status:**
-- ✅ `airflow.cfg` is in `.gitignore`
-- ✅ `.env` is in `.gitignore`
-- ✅ `.env.example` template provided
+### 2. Generate Secret Keys
 
-#### How to Secure Your Installation
+#### Airflow Webserver Secret Key
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
 
-1. **Generate New Secrets**
-   ```bash
-   cd crm-territory-engine
-   python scripts/generate_secrets.py
-   ```
+#### Airflow Fernet Key (for encrypting connection passwords)
+```bash
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
 
-2. **Create Your .env File**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your generated secrets
-   ```
+### 3. Update .env File
 
-3. **Set Environment Variables**
-   
-   Airflow reads configuration from environment variables with the format:
-   ```
-   AIRFLOW__SECTION__KEY=value
-   ```
+Add the generated keys to your `.env` file:
 
-   For example:
-   ```bash
-   export AIRFLOW__WEBSERVER__SECRET_KEY="your-secret-key-here"
-   export AIRFLOW__CORE__FERNET_KEY="your-fernet-key-here"
-   ```
+```bash
+AIRFLOW__WEBSERVER__SECRET_KEY=<your-generated-secret-key>
+AIRFLOW__CORE__FERNET_KEY=<your-generated-fernet-key>
+```
 
-4. **Load Environment Variables**
-   
-   Add to your shell startup file (`~/.zshrc` or `~/.bashrc`):
-   ```bash
-   # Load Airflow environment variables
-   if [ -f ~/path/to/crm-territory-engine/.env ]; then
-       export $(cat ~/path/to/crm-territory-engine/.env | grep -v '^#' | xargs)
-   fi
-   ```
+### 4. Load Environment Variables
 
-   Or use `python-dotenv` in your Python scripts:
-   ```python
-   from dotenv import load_dotenv
-   load_dotenv()
-   ```
+Before starting Airflow, load the environment variables:
 
-### 2. Fernet Key for Connection Encryption
+```bash
+# Option 1: Source the .env file (bash/zsh)
+export $(cat .env | xargs)
 
-Airflow uses Fernet encryption to store connection passwords in the database.
+# Option 2: Use direnv (recommended for automatic loading)
+# Install direnv: brew install direnv
+# Add to your shell: eval "$(direnv hook bash)"  # or zsh
+# Then: direnv allow .
 
-**Generate a Fernet Key:**
+# Option 3: Load in Python scripts
+# Use python-dotenv package
+pip install python-dotenv
+```
+
+## 🚨 Security Checklist
+
+- [ ] `.env` file is in `.gitignore`
+- [ ] `airflow.cfg` is in `.gitignore` (contains local paths)
+- [ ] All secrets use environment variables
+- [ ] Secret keys are randomly generated (not defaults)
+- [ ] `.env.example` contains no actual secrets
+- [ ] Production uses a proper secrets backend (AWS Secrets Manager, HashiCorp Vault, etc.)
+
+## 🔐 Airflow Configuration Security
+
+### Environment Variables Override
+
+Airflow supports environment variable overrides using the pattern:
+```
+AIRFLOW__SECTION__KEY=value
+```
+
+For example:
+- `AIRFLOW__WEBSERVER__SECRET_KEY` overrides `[webserver] secret_key`
+- `AIRFLOW__CORE__FERNET_KEY` overrides `[core] fernet_key`
+
+### Secrets Backend (Production)
+
+For production deployments, use Airflow's secrets backend feature:
+
 ```python
-from cryptography.fernet import Fernet
-print(Fernet.generate_key().decode())
+# In airflow.cfg or via environment variables
+[secrets]
+backend = airflow.providers.amazon.aws.secrets.systems_manager.SystemsManagerParameterStoreBackend
+backend_kwargs = {"connections_prefix": "/airflow/connections", "variables_prefix": "/airflow/variables"}
 ```
 
-**Set in Environment:**
-```bash
-export AIRFLOW__CORE__FERNET_KEY="your-fernet-key-here"
-```
+Supported backends:
+- AWS Systems Manager Parameter Store
+- AWS Secrets Manager
+- Google Cloud Secret Manager
+- HashiCorp Vault
+- Azure Key Vault
 
-**⚠️ Important:** If you change the Fernet key, existing encrypted connections will become unreadable!
+## 📝 What NOT to Commit
 
-### 3. Database Security
+Never commit these files or values:
+- `.env` - Contains actual secrets
+- `airflow.cfg` - Contains local paths and potentially secrets
+- `airflow.db` - Contains encrypted connection data
+- `webserver_config.py` - May contain authentication configs
+- Any file with API keys, passwords, or tokens
 
-#### Development (SQLite)
-- SQLite database (`airflow.db`) is in `.gitignore`
-- Suitable for local development only
-- No network access required
+## 🔄 Rotating Secrets
 
-#### Production (PostgreSQL/MySQL)
-- Use a dedicated database server
-- Store credentials in environment variables
-- Use SSL/TLS for database connections
-- Restrict network access with firewall rules
+If a secret is compromised:
 
-**Example PostgreSQL Connection:**
-```bash
-export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN="postgresql+psycopg2://user:password@localhost:5432/airflow"
-```
+1. **Generate new secret key**:
+   ```bash
+   python -c "import secrets; print(secrets.token_urlsafe(32))"
+   ```
 
-### 4. SMTP Credentials
+2. **Update `.env` file** with new key
 
-If using email notifications, store SMTP credentials securely:
-
-```bash
-export AIRFLOW__SMTP__SMTP_USER="your-email@example.com"
-export AIRFLOW__SMTP__SMTP_PASSWORD="your-app-password"
-```
-
-**Best Practice:** Use app-specific passwords, not your main email password.
-
-## 🔐 Secret Rotation
-
-### When to Rotate Secrets
-
-- **Immediately** if a secret is compromised or exposed
-- **Regularly** as part of security maintenance (quarterly recommended)
-- **Before** moving to production
-- **After** team member departures
-
-### How to Rotate Secrets
-
-1. Generate new secrets using `scripts/generate_secrets.py`
-2. Update `.env` file with new values
-3. Restart all Airflow components:
+3. **Restart Airflow services**:
    ```bash
    # Stop all Airflow processes
    pkill -f airflow
    
-   # Restart with new secrets
-   airflow webserver &
-   airflow scheduler &
-   ```
-4. Update any external systems that use these secrets
-
-## 🛡️ Additional Security Best Practices
-
-### File Permissions
-
-Ensure sensitive files have restricted permissions:
-```bash
-chmod 600 .env
-chmod 600 airflow/airflow.cfg
-chmod 700 airflow/
-```
-
-### Git Security
-
-**Before committing:**
-```bash
-# Check for secrets in staged files
-git diff --cached | grep -i "secret\|password\|key"
-
-# Use git-secrets to prevent committing secrets
-git secrets --scan
-```
-
-**If you accidentally commit a secret:**
-1. Rotate the compromised secret immediately
-2. Remove from git history:
-   ```bash
-   git filter-branch --force --index-filter \
-     "git rm --cached --ignore-unmatch path/to/file" \
-     --prune-empty --tag-name-filter cat -- --all
-   ```
-3. Force push (⚠️ coordinate with team)
-
-### Production Deployment
-
-For production environments:
-
-1. **Use a Secrets Manager**
-   - AWS Secrets Manager
-   - HashiCorp Vault
-   - Azure Key Vault
-   - Google Cloud Secret Manager
-
-2. **Enable Airflow Secrets Backend**
-   ```python
-   # In airflow.cfg or environment
-   AIRFLOW__SECRETS__BACKEND=airflow.providers.amazon.aws.secrets.systems_manager.SystemsManagerParameterStoreBackend
+   # Restart webserver and scheduler
+   airflow webserver -D
+   airflow scheduler -D
    ```
 
-3. **Implement Access Controls**
-   - Use IAM roles/policies
-   - Principle of least privilege
-   - Audit access logs
+4. **Invalidate all sessions** (users will need to log in again)
 
-4. **Network Security**
-   - Use VPC/private networks
-   - Enable SSL/TLS for all connections
-   - Implement firewall rules
-   - Use reverse proxy (nginx/Apache)
+## 🏢 Production Best Practices
 
-### Monitoring & Auditing
+1. **Use a secrets backend** (AWS Secrets Manager, Vault, etc.)
+2. **Enable SSL/TLS** for webserver
+3. **Use PostgreSQL or MySQL** instead of SQLite
+4. **Enable authentication** (OAuth, LDAP, etc.)
+5. **Restrict network access** (firewall, VPC)
+6. **Regular security audits** and dependency updates
+7. **Implement least privilege** access controls
+8. **Enable audit logging**
+9. **Use encrypted connections** to databases
+10. **Rotate secrets regularly** (quarterly or after personnel changes)
 
-- Enable Airflow audit logs
-- Monitor for unauthorized access attempts
-- Set up alerts for security events
-- Regular security audits
-
-## 📚 Resources
+## 📚 Additional Resources
 
 - [Airflow Security Documentation](https://airflow.apache.org/docs/apache-airflow/stable/security/)
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [Python Cryptography Documentation](https://cryptography.io/)
+- [Airflow Secrets Backend](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/)
+- [OWASP Security Guidelines](https://owasp.org/www-project-top-ten/)
 
-## 🚨 Reporting Security Issues
+## 🆘 Security Incident Response
 
-If you discover a security vulnerability, please:
-1. **DO NOT** create a public GitHub issue
-2. Contact the project maintainer directly
-3. Provide detailed information about the vulnerability
-4. Allow time for the issue to be addressed before public disclosure
+If you suspect a security breach:
 
----
-
-**Remember:** Security is everyone's responsibility. When in doubt, ask!
-
+1. **Immediately rotate all secrets**
+2. **Check Airflow logs** for suspicious activity
+3. **Review database audit logs**
+4. **Notify team members**
+5. **Document the incident**
+6. **Update security measures** to prevent recurrence
