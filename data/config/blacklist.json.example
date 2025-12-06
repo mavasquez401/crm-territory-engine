@@ -1,0 +1,6 @@
+{
+  "_comment": "Blacklist: Prevent specific client-territory combinations",
+  "_format": "{ 'client_id': ['blocked_territory_1', 'blocked_territory_2'] }",
+  "3": ["NOR_RET", "SOU_INS"]
+}
+

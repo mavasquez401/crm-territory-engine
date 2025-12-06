@@ -1,0 +1,100 @@
+# =====================================================
+# Docker Compose Configuration
+# =====================================================
+# Orchestrates all services: Airflow, API, and Frontend
+
+version: '3.8'
+
+services:
+  # ===================================================
+  # Airflow ETL Service
+  # ===================================================
+  airflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crm-airflow
+    ports:
+      - "8080:8080"
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow/airflow.db
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW__WEBSERVER__SECRET_KEY}
+      - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW__CORE__FERNET_KEY}
+      - PYTHONPATH=/opt/airflow
+    volumes:
+      - ./data:/opt/airflow/data
+      - ./airflow/dags:/opt/airflow/airflow/dags
+      - ./airflow/logs:/opt/airflow/airflow/logs
+      - ./python_etl:/opt/airflow/python_etl
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ===================================================
+  # FastAPI Backend Service
+  # ===================================================
+  api:
+    build:
+      context: ./crm_mock_api
+      dockerfile: Dockerfile
+    container_name: crm-api
+    ports:
+      - "8000:8000"
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    volumes:
+      - ./data:/app/data:ro  # Read-only access to data
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - airflow
+
+  # ===================================================
+  # React Frontend Service
+  # ===================================================
+  frontend:
+    build:
+      context: ./frontend/react-dashboard
+      dockerfile: Dockerfile
+    container_name: crm-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - api
+
+# ===================================================
+# Networks
+# ===================================================
+networks:
+  crm-network:
+    driver: bridge
+    name: crm-network
+
+# ===================================================
+# Volumes (optional - for data persistence)
+# ===================================================
+volumes:
+  airflow-logs:
+  airflow-db:

@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Airflow
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.db-shm
+airflow/airflow.db-wal
+airflow/*.pid
+
+# Environment
+.env
+.env.local
+.envrc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# Node
+node_modules/
+frontend/react-dashboard/node_modules/
+frontend/react-dashboard/dist/
+
+# Logs
+*.log
+
+# Reports (generated)
+data/reports/
+
+# Config (actual configs, not examples)
+data/config/*.json

@@ -28,6 +28,16 @@ data/**/*.csv
 data/core/
 data/mock_clients/
 
+# Configuration files (keep examples, ignore actual configs)
+data/config/*.json
+!data/config/*.json.example
+
+# Reports (generated files)
+data/reports/
+
+# Snowflake credentials
+snowflake_credentials.json
+
 # Hide OS junk files
 .DS_Store
 .DS_Store?

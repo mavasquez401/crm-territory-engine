@@ -1,0 +1,32 @@
+{
+  "_comment": "Segmentation tiers configuration for auto-assignment",
+  "_format": "Define tiers with criteria and territory mappings",
+  "tiers": {
+    "tier_1_institutional": {
+      "description": "High-value institutional clients",
+      "criteria": {
+        "segment": "Institutional"
+      },
+      "territory_suffix": "T1",
+      "priority": 1,
+      "advisor_capacity": 20
+    },
+    "tier_2_retail": {
+      "description": "Standard retail clients",
+      "criteria": {
+        "segment": "Retail"
+      },
+      "territory_suffix": "T2",
+      "priority": 2,
+      "advisor_capacity": 50
+    },
+    "tier_3_general": {
+      "description": "General/other clients",
+      "criteria": {},
+      "territory_suffix": "T3",
+      "priority": 3,
+      "advisor_capacity": 100
+    }
+  }
+}
+

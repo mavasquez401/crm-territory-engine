@@ -1,0 +1,7 @@
+{
+  "_comment": "Whitelist: Explicit client-to-territory mappings that override all other rules",
+  "_format": "{ 'client_id': 'territory_id' }",
+  "1": "NOR_INS",
+  "2": "NOR_RET"
+}
+

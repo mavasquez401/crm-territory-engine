@@ -1,0 +1,17 @@
+# Core dependencies
+apache-airflow==2.7.3
+pandas==2.1.3
+
+# Data quality and deduplication
+rapidfuzz==3.5.2
+
+# Cloud integrations
+snowflake-connector-python==3.6.0
+boto3==1.34.10
+
+# Security
+cryptography==41.0.7
+
+# Optional but useful
+python-dotenv==1.0.0
+
