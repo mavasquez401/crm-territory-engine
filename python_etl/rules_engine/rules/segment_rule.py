@@ -106,3 +106,4 @@ class SegmentRule(BaseRule):
         
         return result
 
+

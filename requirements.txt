@@ -15,3 +15,4 @@ cryptography==41.0.7
 # Optional but useful
 python-dotenv==1.0.0
 
+

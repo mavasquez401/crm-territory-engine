@@ -164,3 +164,4 @@ class WhitelistRule(BaseRule):
         
         return result
 
+

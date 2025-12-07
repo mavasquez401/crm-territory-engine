@@ -80,3 +80,4 @@ def transform_raw_to_core() -> None:
     run_transformation_sql(sql_file, database="CORE", schema="dimensional")
     logger.info("RAW to CORE transformation complete")
 
+

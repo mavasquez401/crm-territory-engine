@@ -117,3 +117,4 @@ with DAG(
     # Single task for now - can be expanded with pre/post checks
     update_assignments
 
+

@@ -87,3 +87,4 @@ class S3Config:
             f"configured={self.is_configured()})"
         )
 
+

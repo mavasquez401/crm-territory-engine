@@ -162,3 +162,4 @@ SHOW TABLES IN DATABASE CORE;
 
 SELECT 'Tables created successfully in RAW, STAGE, and CORE databases' AS status;
 
+

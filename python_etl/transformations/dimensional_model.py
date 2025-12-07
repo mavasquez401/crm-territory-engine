@@ -154,3 +154,4 @@ def transform_to_dimensional_model(
     
     return client_dim, territory_dim, assignments_fact
 
+

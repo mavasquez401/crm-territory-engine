@@ -61,3 +61,4 @@ SHOW SCHEMAS IN DATABASE CORE;
 
 SELECT 'Schemas created successfully in RAW, STAGE, and CORE databases' AS status;
 
+

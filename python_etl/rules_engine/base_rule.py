@@ -95,3 +95,4 @@ class BaseRule(ABC):
         """
         return self.priority < other.priority
 
+

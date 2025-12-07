@@ -157,3 +157,4 @@ def close_connection(conn: snowflake.connector.SnowflakeConnection) -> None:
     except Exception as e:
         logger.warning(f"Error closing connection: {e}")
 
+

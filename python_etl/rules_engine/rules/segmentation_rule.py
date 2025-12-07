@@ -218,3 +218,4 @@ class SegmentationRule(BaseRule):
             metadata={"assignment_method": "no_tier_match"}
         )
 
+

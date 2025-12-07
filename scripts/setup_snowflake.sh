@@ -99,3 +99,4 @@ echo "  GRANT ROLE DATA_ENGINEER TO USER your_username;"
 echo "  GRANT ROLE CRM_ANALYST TO USER your_username;"
 echo "  GRANT ROLE SALES_LEADERSHIP TO USER your_username;"
 
+

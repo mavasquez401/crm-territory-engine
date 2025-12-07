@@ -232,3 +232,4 @@ class TerritoryAssigner:
         
         return stats
 
+

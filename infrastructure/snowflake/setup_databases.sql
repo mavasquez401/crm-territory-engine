@@ -52,3 +52,4 @@ ALTER DATABASE CORE SET DATA_RETENTION_TIME_IN_DAYS = 30;
 
 SELECT 'Databases created successfully: RAW, STAGE, CORE' AS status;
 
+

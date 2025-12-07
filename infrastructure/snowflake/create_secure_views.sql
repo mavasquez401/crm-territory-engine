@@ -184,3 +184,4 @@ SELECT * FROM v_regional_performance;
 
 SELECT 'Secure views created successfully and granted to SALES_LEADERSHIP and CRM_ANALYST roles' AS status;
 
+

@@ -229,3 +229,4 @@ WHERE a.client_key IS NULL AND c.is_active = TRUE;
 
 SELECT 'Transformation to CORE complete: CLIENT_DIM, TERRITORY_DIM, ASSIGNMENTS_FACT' AS status;
 
+
